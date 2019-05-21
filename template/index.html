@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html
+        lang="en" class="wf-loading">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/lib/css/style.css" type="text/css"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png"/>
+    <link rel="manifest" href="/favicon/manifest.json"/>
+    <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#ff1c1c"/>
+    <link rel="shortcut icon" href="/favicon/favicon.ico"/>
+    <meta name="msapplication-config" content="/favicon/browserconfig.xml"/>
+    <meta name="theme-color" content="#ffffff"/>
+    <title>RPO</title>
+    <meta name="keywords" content="BitMan">
+    <meta name="description" content="BitMan">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all">
+    <meta content="en_US" property="og:locale">
+    <meta content="website" property="og:type">
+    <meta content="https://localhost/" property="og:url">
+    <script type="text/javascript">
+        var mobileAgent = new Array("iphone", "ipod", "ipad", "android", "mobile", "blackberry", "webos", "incognito", "webmate", "bada", "nokia", "lg", "ucweb", "skyfire");
+        var browser = navigator.userAgent.toLowerCase();
+        var isMobile = false;
+        var s = window.location.search;
+
+        var redirect;
+        if (s != null) {
+            s = s.substr(1, s.length);
+            var params = s.split("&");
+            for (var i = 0; i < params.length; i++) {
+                var parameter = params[i];
+                var kv = parameter.split("=");
+                if (kv[0] == "redirect" && kv[1]) {
+                    redirect = kv[1];
+                }
+            }
+            ;
+        }
+
+        if (redirect == 1) {
+            var url = "localhost/web";
+            for (var i = 0; i < mobileAgent.length; i++) {
+                if (browser.indexOf(mobileAgent[i]) != -1) {
+                    isMobile = true;
+                    console.log(mobileAgent[i]);
+                    url = "localhost/web/mobile";
+                    break;
+                }
+            }
+            location.href = url + "?" + s;
+        }
+
+
+    </script>
+
+</head>
+<body>
+<header class="header">
+    <div class="header__wrapper">
+        <a class="header__logo" href="/">
+            <img src="/new_images/LOGO@2x.png"/>
+        </a>
+        <a class="header__menu-open" href="#">
+            <svg class="icon">
+                <use xlink:href="/images/svg-icons.svg#icon-menu"></use>
+            </svg>
+        </a>
+        <a class="header__menu-close" href="#">
+            <svg class="icon">
+                <use xlink:href="/images/svg-icons.svg#icon-cross"></use>
+            </svg>
+        </a>
+        <div class="header__nav">
+            <nav class="nav">
+                <ul>
+                    <li class="nav__item"><a href="#intro">游戏介绍</a></li>
+                    <li class="nav__item"><a href="javascript:void(0);">网页版</a></li>
+                    <li class="nav__item"><a href="#panel1">Android</a></li>
+                    <li class="nav__item"><a href="#panel2">iOS</a></li>
+                    <li class="nav__item"><a href="#new-server">申请开服</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+
+<div class="home-hero" id="intro" style="background: #1f3368  url(/new_images/BG-1@2x.png) no-repeat center top">
+    <div class="home-hero__text" data-aos="fade-up">
+        <div class="home-hero__text__header"></div>
+        <p class="home-hero__text__paragraph">RPO是全球共享计算与区块链创领者，拥有核心技术的分布式计算创新社群；<br>
+            通过区块链技术与社交、游戏的结合，使用户零门槛轻松参与游戏和互动；<br>
+            现已支持各大公链，欢迎免费加入，共同促进区块链技术的发展及社区繁荣。</p>
+        <div class="button-array button-array--center">
+            <a href="#panel1" class="button-array__button button-array__button--primary myBtn"></a>
+        </div>
+    </div>
+    <div class="bg_planet"></div>
+    <!--<div class="home-hero__background"></div>-->
+    <!--<a href="#panel1" class="home-hero__arrow js-home-scroll">-->
+    <!--<svg class="icon">-->
+    <!--<use xlink:href="/images/svg-icons.svg#icon-arrow"/>-->
+    <!--</svg>-->
+    <!--</a>-->
+</div>
+<div class="container container--overflow padded-top-large download" id="panel1"
+     style="background: #1f3368 url(/new_images/BG-2@2x.png) no-repeat center top">
+    <div class="flex-row-sm flex-row-sm--reverse" data-aos="fade-up">
+        <div class="c-6 c-6-sm text-content">
+            <div class="title-android"></div>
+            <div class="light_line"></div>
+            <p>欢迎安装Android版RPO，畅玩比特星系</p>
+            <a class="android myBtn" href="http://localhost/RPO-release-signed.apk"></a>
+        </div>
+    </div>
+</div>
+<div class="container container--overflow padded-top-large download"
+     style="background: #1f3368 url(/new_images/BG-3@2x.png) no-repeat center top" id="panel2">
+    <div class="flex-row-sm flex-row--reverse" data-aos="fade-up">
+        <div class="c-6 c-6-sm text-content">
+            <div class="title-ios"></div>
+            <div class="light_line"></div>
+            <p>点击安装iOS版RPO，畅玩比特星系</p>
+            <a class="ios myBtn" target="_blank" href="itms-services://?action=download-manifest&url=https://localhost/test/app/2019/03/05/RPO.plist"></a>
+        </div>
+        <div class="c-4 c-4-sm image-content">
+            <img src="/new_images/mobile@2x.png" alt="">
+        </div>
+    </div>
+</div>
+<div class="container padded-both web-version download"
+     style="background: #1f3368  url(/new_images/BG-4@2x.png) no-repeat center top">
+    <div class="text-content" data-aos="fade-right">
+        <div class="title-web"></div>
+        <p>支持 PC 、MAC、iOS、Android 等</p>
+        <div class="light_line"></div>
+        <p>您可使用IE、Chrome、Safari、手机浏览器、微信、QQ、telegram</p>
+        <p>等工具直接通过链接打开</p>
+        <a class="web myBtn" target="_blank" href="javascript:void(0);"></a>
+    </div>
+</div>
+
+
+<div id="new-server" class="banded-dark container padded-both-large"
+     style="background: #1f3368  url(/new_images/BG-5@2x.png) no-repeat center top">
+    <div class="blue-bottom-left">
+        <div class="padded-both-large content-10 padded-bottom text-content text-center home-contact-text"
+             data-aos="fade-up">
+            <div class="title-input home-contact-text__header"></div>
+            <p class="home-contact-text__paragraph text1">RPO是开放的，免费的。
+                <br>
+                如果您是区块链从业者，欢迎和我们共同营造开放的游戏社区。
+            </p>
+            <div class="light_line"></div>
+            <p class="text2">
+                您可申请开通基于你的区块代币的区块游戏，通过用户在游戏的活跃行为，奖励区块代币。作为创世者，你需要转入一定数量的代币，以及ETH GAS费用，并通过我们审核后，即可开通您的代币的游戏。代币作为奖励用户活跃行为，ETH作为GAS费用；RPO不收取任何费用，欢迎大家在遵行当地法律的基础上开通RPO，共同营造区块繁荣。
+            </p>
+        </div>
+    </div>
+
+    <div class="padded-bottom blue-bottom-right" data-aos="fade-up">
+        <div class="content-10 padded-bottom">
+            <div class="form-container grid grid--v-margin form-container--dark">
+                <form method="post" action="/new-server" accept-charset="UTF-8">
+                    <input type="hidden" name="CRAFT_CSRF_TOKEN"
+                           value="AG8INiy7l7bzJ6jAmpzh7L9gfSUyevCras7nXOJhVUZAwmynDjW-NWQBewNmyPDzxVD9r9Xdj5yHEx8RYRSHyAuU0wibUg01LrhZzCNa1XM=">
+                    <input type="hidden" name="action" value="contact-form/send"/>
+                    <input type="hidden" name="redirect"
+                           value="99e8f4fd45ea660f12a70620237433f7c28d76b9f62196ad4767e9eed4005250contact/?sent=true">
+                    <div class="c-6 c-6-sm">
+                        <label for="fromName">NAME</label>
+                        <input id="fromName" name="fromName" type="text" required="required" value=""/>
+                    </div>
+
+                    <div class="c-6 c-6-sm omega">
+                        <label for="fromEmail">EMAIL</label>
+                        <input id="fromEmail" name="fromEmail" type="email" required="required" value=""/>
+                    </div>
+
+
+                    <div class="c-6 c-6-sm">
+                        <label for="phone">PHONE</label>
+                        <input id="phone" name="message[Phone]" type="text" required="required" value=""/>
+                    </div>
+
+
+                    <div class="c-6 c-6-sm omega">
+                        <label for="company">COMPANY/ORGANIZATION</label>
+                        <input id="company" name="message[Company]" type="text" required="required" value=""/>
+                    </div>
+
+
+                    <div class="c-12 c-12-sm omega">
+                        <label for="message">MESSAGE</label>
+                        <div class="textareaBox">
+                            <textarea id="message" name="message[body]" required="required"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="button-array button-array--center">
+                        <input class="myBtn button-array__button button-array__button--primary" type="submit" value=""/>
+                    </div>
+                    <input type="text" name="url_1" class="input_url_1"/>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="footer__top">
+        <div class="footer__nav">
+            <nav class="nav">
+                <ul>
+                    <li class="nav__item"><a href="#">WORK</a></li>
+                    <li class="nav__item"><a href="#">PROCESS</a></li>
+                    <li class="nav__item"><a href="#">ABOUT</a></li>
+                    <li class="nav__item"><a href="#">BLOG</a></li>
+                    <li class="nav__item emphasize"><a href="#">CONTACT</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="footer__bottom">
+        <div class="footer__social-links">
+            <ul class="social-links"></ul>
+        </div>
+        <div class="footer__location">
+            <div>
+                <span class="name">xxx@xxx.com</span></div>
+        </div>
+</footer>
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>-->
+<!--<script>WebFont.load({google: {families: ["Saira+Condensed:400,500", "Share+Tech+Mono"]}});</script>-->
+<script src="/lib/js/scripts.js"></script>
+<script src="/lib/js/ionslider.js" async></script>
+</body>
+</html>

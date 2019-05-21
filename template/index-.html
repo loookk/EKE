@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BitMan</title>
+</head>
+<script type="text/javascript">
+    var mobileAgent = new Array("iphone", "ipod", "ipad", "android", "mobile", "blackberry", "webos", "incognito", "webmate", "bada", "nokia", "lg", "ucweb", "skyfire");
+    var browser = navigator.userAgent.toLowerCase();
+    var isMobile = false;
+
+    var url = "localhost/web";
+    var s = window.location.search;
+
+    for (var i=0; i<mobileAgent.length; i++){
+        if (browser.indexOf(mobileAgent[i])!=-1){
+            isMobile = true;
+            console.log(mobileAgent[i]);
+            url = "localhost/mobile";
+            break;
+        }
+    }
+    location.href = url+s;
+</script>
+<body>
+
+</body>
+</html>

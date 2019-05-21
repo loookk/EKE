@@ -1,0 +1,177 @@
+"use strict";
+var express        = require('express');
+var session        = require('express-session');
+var bodyParser     = require('body-parser');
+var methodOverride = require('method-override');
+var swig           = require('swig');
+var publicPath   = __dirname + '/public';
+var templatePath = __dirname + '/template';
+var mysql        = require('../shared/mysql/mysql.js');
+var redis        = require('../shared/redis/redis.js');
+var tokenSer   	 = require('../shared/token');
+var port;
+var cfg          = require('./config/cfg.js');
+
+var https = require('https');
+var fs = require('fs');
+
+var options = {
+    key:fs.readFileSync(cfg.sslKey),
+    cert:fs.readFileSync(cfg.sslCrt)
+}
+
+//console.log("cfg.sslKey:",options)
+ var nodeEnv = 'development';
+ process.env.NODE_ENV = nodeEnv;
+
+
+global.App   	  = express();
+global.DIR_ROOT	  = __dirname + '/';
+global.DIR_SHARED = DIR_ROOT + '../shared/';
+global.Underscore = require('underscore');
+global.Common	  = require('../shared/common.js');
+global.Utils 	  = require('../shared/utils.js');
+global.Code		  = require('./config/cfg.js').Code;
+global.SysCfg 	  = Common.SysCfg();
+global.hotFixPath = __dirname + '/public/hotFix/';
+
+var httpsServer = https.createServer(options,App);
+
+global.checkSign = function (req, handler, next){
+
+    return next();
+
+    var map = req.body;
+
+
+    var keys = Underscore.keys(map);
+    keys.sort();
+    var ary = [];
+    Underscore.each(keys, function(idx) {
+        if(idx != "nameMd5")
+            ary.push([idx, map[idx]].join('='))
+    });
+
+    var str  = ary.join('&') + cfg.secretKey;
+    var sign = Common.md5(str).toLowerCase();
+
+    var checkSign = map['nameMd5'];
+    var checkTime = parseInt(map['t']);
+    checkTime = checkTime > 0 ? checkTime/1000 : 0;
+
+    var time = Math.abs(Utils.now() - checkTime);
+
+
+    if(sign == checkSign && time < 300){
+        next();
+    }else{
+        return handler.send( {code:Code.Token_Expire, error:"Param error"} );
+    }
+}
+
+
+// Token auth
+global.EnsureAuth = function (req, handler, next) {
+    var token  = req.body.token,
+        pToken = token ? tokenSer.parse(token, SysCfg.session.secret) : null;
+
+    // console.log("————————————————req.body:",req.body)
+    // console.log("————————————————reqpToken:",pToken)
+    // return handler.send( {code:Code.Token_Invalid, error:req.body} );
+
+    if( !pToken ) {
+        return handler.send( {code:Code.Token_Invalid, error:"Invalid token"} );
+    }
+    if( !tokenSer.checkExpire(pToken, SysCfg.netSec.expire) ) {
+        return handler.send( {code:Code.Token_Expire, error:"Token expire"} );
+    }
+    req.body.pToken = pToken;
+    next();
+};
+
+global.EnsureWebToken = function (req, res, next) {
+    if( req.query.token !== require('./config/cfg').serverAuthToken){
+        return res.send({code: Code.FAIL, msg:'无权访问'});
+    }
+    return next();
+};
+
+
+// 开发环境
+var developmentConfig = function() {
+    port = SysCfg.web_port.development;
+    App.use( express.static(publicPath) );
+    process.on('uncaughtException', function (err) {
+        console.error(' Caught exception: ' + err.stack);
+    });
+};
+
+
+// 生产环境
+var productConfig = function() {
+    port = SysCfg.web_port.production;
+    // port = 80;
+    App.use( express.static(publicPath, {maxAge: 3600000}) );
+    process.on('uncaughtException', function (err) {
+        Common.mailException("web-server报错", err);
+    });
+};
+
+// Common配置
+App.use( methodOverride('_method') );
+App.use( bodyParser.urlencoded({extended: true}) );
+App.use( bodyParser.json({type: "application/*", limit: '20mb'}) );// parse application/json
+//App.use( App.router );
+App.use(session({
+
+    resave: false,                // don't save session if unmodified
+    saveUninitialized: false,     // don't create session until something stored
+    secret: SysCfg.netSec.secret
+}));
+
+//设置跨域访问
+App.use(function(req, res, next){
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET');
+    next();
+});
+
+App.set('view engine', 'html');
+App.set('views', templatePath);
+// App.set('view options', {layout: false});
+App.set('basepath', publicPath);
+// App.engine('html', require('ejs').renderFile);
+App.engine('html', swig.renderFile);
+
+
+// process.env.NODE_ENV = 'production';
+if (process.env.NODE_ENV === 'production') {
+    productConfig();
+}
+else {
+    developmentConfig();
+}
+// Common配置 End
+
+
+// init
+mysql.init();
+redis.init();
+App.set('redis', redis);
+App.set('mysql', mysql);
+App.listen(port);
+
+
+//https监听
+// httpsServer.listen(port);
+
+// Auto require Controller
+var ctrAry = Utils.getDirFiles( DIR_ROOT+"controller" );
+Underscore.each(ctrAry, function( fname ){
+    if (fname.indexOf('.js') >= 0) {
+        require(fname);
+    }
+});
+
+console.log("Web server has started.\n Please log on http://127.0.0.1:" + port + "/");
